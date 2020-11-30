@@ -64,7 +64,7 @@ def complimentLast(name, folder="D:\\Reserved Space"):
     fNot.close()
 
 def fullFile(name, folder, size=1024**3):
-    if not os.path.exists("data/algorithm.dat"):
+    if not os.path.exists("../data/algorithm.dat"):
         zeros(name,folder,size)
         ones(name,folder,size)
         random(name,folder,size)
@@ -75,7 +75,7 @@ def fullFile(name, folder, size=1024**3):
         funcDict["0"] = zeros
         funcDict["1"] = ones
         funcDict["r"] = random
-        f = open("data/algorithm.dat")
+        f = open("../data/algorithm.dat")
         algo = f.read()
         f.close()
         for c in algo:

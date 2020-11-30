@@ -1,9 +1,8 @@
 import glob
-from typing import List
 
 import psutil
 import os
-import makeFiles
+from python import makeFiles
 import time
 import sys
 
@@ -34,7 +33,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def writePID():
     pid = os.getpid()
-    pid_file = "data/pid_background.dat"
+    pid_file = "../data/pid_background.dat"
     f = open(pid_file,"w+")
     f.write(str(pid))
     f.close()
@@ -44,13 +43,13 @@ def writePID():
 
 
 
-folder = open("data/mainFolder.dat").read()
+folder = open("../data/mainFolder.dat").read()
 
 # print("----->",folder)
 reserved = sum([os.path.getsize(a) for a in glob.glob(os.path.join(folder,"*"))])
 
 
-amountToBeFree = float(open("data/keepFree.dat").read())
+amountToBeFree = float(open("../data/keepFree.dat").read())
 
 
 total    = hdd.total
@@ -79,9 +78,9 @@ def run(forever):
     writePID()
     while(True):
         hdd = psutil.disk_usage("D:\\")
-        amountToBeFree = float(open("data/keepFree.dat").read())
+        amountToBeFree = float(open("../data/keepFree.dat").read())
 
-        f = open("data/wasFree.dat", "w+")
+        f = open("../data/wasFree.dat", "w+")
         f.write(str(hdd.free))
         f.close()
 

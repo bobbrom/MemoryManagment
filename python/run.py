@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import os
 import psutil
 import webbrowser
-import background
+from python import background
 from shutil import copyfile
 import threading
 
@@ -12,7 +12,7 @@ app = Flask(__name__)
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def hdd_letter():
-    f = open("data/mainFolder.dat")
+    f = open("../data/mainFolder.dat")
     a = f.read()[0]
     hdd_letter = a + ":\\"
     f.close()
@@ -20,7 +20,7 @@ def hdd_letter():
 
 
 def getReserved():
-    folder = open("data/mainFolder.dat").read()
+    folder = open("../data/mainFolder.dat").read()
     files = []
     for f in os.walk(folder):
         files += [os.path.join(f[0], a) for a in f[-1]]
@@ -28,7 +28,7 @@ def getReserved():
     return sum([os.path.getsize(a) for a in files])
 
 def isRunning():
-    f = open("data/pid_background.dat")
+    f = open("../data/pid_background.dat")
     pid = int(f.read())
     f.close()
     running = False
@@ -40,11 +40,11 @@ def isRunning():
 
 @app.route('/_add_numbers')
 def add_numbers():
-    f = open("data/wasFree.dat")
+    f = open("../data/wasFree.dat")
     wasFree = int(f.read())
     f.close()
 
-    f = open("data/keepFree.dat")
+    f = open("../data/keepFree.dat")
     keepFree = int(f.read()) * 1024**3
     f.close()
 
@@ -69,11 +69,11 @@ def add_numbers():
 
 
 hdd = psutil.disk_usage(hdd_letter())
-folder = open("data/mainFolder.dat").read()
+folder = open("../data/mainFolder.dat").read()
 
 
 def getReserved():
-    folder = open("data/mainFolder.dat").read()
+    folder = open("../data/mainFolder.dat").read()
     files = []
     for f in os.walk(folder):
         files += [os.path.join(f[0], a) for a in f[-1]]
@@ -95,11 +95,11 @@ def index():
     usedPerc     = round((100/total)*used,2)
     freePerc     = round((100/total)*free,2)
 
-    f = open("data/mainFolder.dat")
+    f = open("../data/mainFolder.dat")
     mainFolder = f.read()
     f.close()
 
-    f = open("data/algorithm.dat")
+    f = open("../data/algorithm.dat")
     algorithm = f.read()
     f.close()
 
@@ -108,7 +108,8 @@ def index():
         running_checked = "checked"
 
     run_on_startup = ""
-    if( os.path.exists(os.path.join(os.getenv('ProgramData'),"Microsoft\\Windows\\Start Menu\\Programs\\StartUp","MemoryManagment.bat")) ):
+    if( os.path.exists(os.path.join(os.getenv('ProgramData'),"Microsoft\\Windows\\Start Menu\\Programs\\StartUp",
+                                    "../MemoryManagment.bat"))):
         run_on_startup = "checked"
     available = round((reserved + free) / 1024**3)
     return render_template( "index.html",
@@ -133,22 +134,25 @@ def runOnStartUp():
     file_folder.pop()
     file_folder = os.sep.join(file_folder)
 
-    bat_file = os.path.join(file_folder, "MemoryManagment.bat")
+    bat_file = os.path.join(file_folder, "../MemoryManagment.bat")
     if not os.path.exists(bat_file):
-        cmd = os.path.join(file_folder, "venv", "Scripts", "pythonw.exe")
+        cmd = os.path.join(file_folder, "../venv", "Scripts", "pythonw.exe")
         background_file = os.path.join(file_folder, "background.py")
         f = open(bat_file, "w+")
         f.write(cmd + " " + background_file)
         f.close()
 
-    if not os.path.exists(os.path.join(os.getenv('ProgramData'),"Microsoft\\Windows\\Start Menu\\Programs\\StartUp","MemoryManagment.bat")):
-        dst = os.path.join(os.getenv('ProgramData'), "Microsoft\\Windows\\Start Menu\\Programs\\StartUp", "MemoryManagment.bat")
-        copyfile("MemoryManagment.bat", dst)
+    if not os.path.exists(os.path.join(os.getenv('ProgramData'),"Microsoft\\Windows\\Start Menu\\Programs\\StartUp",
+                                       "../MemoryManagment.bat")):
+        dst = os.path.join(os.getenv('ProgramData'), "Microsoft\\Windows\\Start Menu\\Programs\\StartUp",
+                           "../MemoryManagment.bat")
+        copyfile("../MemoryManagment.bat", dst)
     return ""
 
 @app.route('/dontRunOnStartup', methods=['POST'])
 def dontRunOnStartUp():
-    dst = os.path.join(os.getenv('ProgramData'), "Microsoft\\Windows\\Start Menu\\Programs\\StartUp", "MemoryManagment.bat")
+    dst = os.path.join(os.getenv('ProgramData'), "Microsoft\\Windows\\Start Menu\\Programs\\StartUp",
+                       "../MemoryManagment.bat")
     os.remove(dst)
     return ""
 
@@ -157,14 +161,14 @@ def runNow():
     file_folder = __file__.split("/")
     file_folder.pop()
     file_folder = os.sep.join(file_folder)
-    cmd = os.path.join(file_folder, "venv", "Scripts", "pythonw.exe")
+    cmd = os.path.join(file_folder, "../venv", "Scripts", "pythonw.exe")
     background_file = os.path.join(file_folder, "background.py")
     os.system(cmd+" "+background_file)
     return ""
 
 @app.route('/dontRunNow', methods=['POST'])
 def dontRunNow():
-    f = open("data/pid_background.dat")
+    f = open("../data/pid_background.dat")
     pid = f.read()
     f.close()
 
@@ -180,14 +184,14 @@ def refresh():
 
 @app.route('/setMainFolder', methods=['POST'])
 def setMainFolder():
-    f = open("data/mainFolder.dat","w+")
+    f = open("../data/mainFolder.dat", "w+")
     f.write(request.form['mainFolder'])
     f.close()
     return ""
 
 @app.route('/setAlgorithm', methods=['POST'])
 def setAlgorithm():
-    f = open("data/algorithm.dat","w+")
+    f = open("../data/algorithm.dat", "w+")
     f.write(request.form['algorithm'])
     f.close()
     return ""
@@ -196,7 +200,7 @@ def background():
     file_folder = __file__.split("/")
     file_folder.pop()
     file_folder = os.sep.join(file_folder)
-    cmd = os.path.join(file_folder, "venv", "Scripts", "pythonw.exe")
+    cmd = os.path.join(file_folder, "../venv", "Scripts", "pythonw.exe")
     background_file = os.path.join(file_folder, "background.py")
     os.system(cmd + " " + background_file + " false")
 
@@ -207,7 +211,7 @@ def reserveFreeSpace():
     if not isRunning():
         thread = threading.Thread(target=background, name="Background")
         thread.start()
-    f = open("data/keepFree.dat","w+")
+    f = open("../data/keepFree.dat", "w+")
     f.write(request.form['amountToReserve'])
     f.close()
 
