@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Reserved Space Manager</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+	$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	function run(){
+		$.getJSON($SCRIPT_ROOT+'/_add_numbers', {}, function(data) {
+		    console.log(data)
+		    console.log(data.result)
+			$("#used").css("width", data.result+"%");
+			$("#pecResult").html(data.result+"% Complete")
+			$("#eta").html("Completed in "+data.eta+" Minutes")
+			$("#amountResult").html(data.done+"GB / {{amountToReserve}}GB");
+		  })
+	}
+	
+	$(function() {
+		$("").load($SCRIPT_ROOT+'/_test');
+		setInterval( run , 500 )
+	});
+	</script>
+	<style>
+		#wrapper{
+		  display:inline-block;
+		  width:80vw;
+		  height:22px;
+		  border-style:solid;
+		  margin:0;
+		  padding:0;
+		  font-family:sans-serif;
+		  margin: 0;
+		  position: absolute;
+		  left: 50%;
+		  transform: translateX(-50%);
+		  background-color:white;
+		}
+		.perc{
+		  display:inline-block;
+		  height:22px;
+		  border-top:0;
+		  border-bottom:0;
+		  text-align:center;
+		  margin:0;
+		  overflow:hidden;
+		  transition-timing-function: linear;
+		}
+		#used{
+		  border-left:0;
+		  background-color:#cf4249;
+		  width:0%;
+		  
+		  font-family:sans-serif;
+		}
+		p{
+		  display:inline-block;
+		  font-size:1.5vmax;
+		  font-family:sans-serif;
+		}
+		#amountResult{
+		  float:right;
+		  margin-right:10vw;
+		}
+		#pecResult{
+		  margin-left:10vw;
+		}
+		body{
+		  position: relative;
+		}
+		h1{
+		  text-align:center;
+		}
+		#eta{
+		  text-align:center;
+		  width:100%;
+		  
+		}
+	</style>
+</head>
+<body>
+	<h1>Reserving space on Hard Drive</h1>
+	<div id="wrapper">
+	  <div class="perc" id="used"></div>
+	</div><br>
+	<p id="pecResult">0% Complete</p>
+	 <p id="amountResult">0GB / {{amountToReserve}}GB</p>
+	<br>
+	<p id="eta">Completed in 50 Minutes</p>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Reserved Space Manager</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document).ready( function(){
+          var checkArr = document.getElementsByClassName("check")
+          for(var i = 0; i < checkArr.length; i++){
+            var target = checkArr[i].id
+            var divName = target.split("_")[0]+"_div"
+            console.log(divName)
+            if ($('#'+target).is(':checked')) {
+              $("#"+divName).css({"background-color":"green"})
+            }else{
+              $("#"+divName).css({"background":"red"})
+            }
+         } 
+      
+			$('.check').change( function(e){
+			  var target = e.target.id
+			  var divName = target.split("_")[0]+"_div"
+			  console.log(divName)
+				if ($(this).is(':checked')) {
+				  $("#"+divName).css({"background-color":"green"})
+				  if(target == "background_checkbox"){
+					$.post("runOnStartup");
+				  }else{
+				    $.post("runNow");
+				  }
+				}else{
+					$("#"+divName).css({"background":"red"})
+				  if(target == "background_checkbox"){
+					$.post("dontRunOnStartup");
+				  }else{
+				    $.post("dontRunNow");
+				  }
+				 }
+			  });
+		});
+	</script>
+</head>
+<body>
+	<style>
+	h1{
+	  text-align:center;
+	}
+	#wrapper{
+	  display:inline-block;
+	  width:80vw;
+	  height:22px;
+	  border-style:solid;
+	  margin:0;
+	  padding:0;
+	  font-family:sans-serif;
+	   margin: 0;
+	  position: absolute;
+	  left: 50%;
+	  transform: translateX(-50%);
+	  background-color:#DDDDDD;
+	}
+	.perc{
+	  display:inline-block;
+	  height:22px;
+	  border-style:solid;
+	  border-top:0;
+	  border-bottom:0;
+	  text-align:center;
+	  margin:0;
+	  overflow:hidden;
+	}
+	#used{
+	  border-left:0;
+	  background-color:#cf4249;
+	  width:37.1%;
+	  
+	  font-family:sans-serif;
+	}
+	#reserved{
+	  border-right:0;
+	  background-color:#94dfff;
+	  float:right;
+	  width:40%;
+	}
+	p{
+	  margin:0;
+	  padding-top:2px;
+	}
+
+
+	ul {
+	  list-style: none;
+	  display:block;
+	}
+
+	ul li::before {
+	  content: "\25A0";
+	  font-weight: bold;
+	  display: inline-block; 
+	  width: 1em;
+	  margin-left: -1em;
+	}
+	ul li:first-child::before {
+		color:black;
+	}
+	ul li:nth-child(2n)::before {
+	  color: #cf4249;
+	}
+	ul li:nth-child(3n)::before {
+	  color:#DDDDDD;
+	}
+	ul li:nth-child(4n)::before {
+		color:#94dfff;
+	}
+	form{
+	  width:100%;
+	}
+
+	#inRes{
+	  width:69%;
+	  font-size:2vmax;
+	}
+	#typeOption{
+	  width:29.75%;
+	  font-size:2vmax;
+	  padding: 1px 1px !important;
+	}
+	#submitRes, #refresh{
+	  width:100%;
+	  text-align:center;
+	  font-size:2vmax;
+	}
+
+	h2{
+	  text-align:center;
+	}
+
+	.switch {
+	  
+	  position: relative;
+	  display: inline-block;
+	  width: 60px;
+	  height: 34px;
+	  margin-left: 45%;
+	  margin-top:1%;
+	  margin-bottom:1%;
+	}
+
+	.switch input { 
+	  z-axis:100;
+	  width: 10;
+	  height: 10;
+	}
+
+	.slider {
+	  position: absolute;
+	  cursor: pointer;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  background-color: #ccc;
+	  -webkit-transition: .4s;
+	  transition: .4s;
+
+	}
+
+	.slider:before {
+	  position: absolute;
+	  content: "";
+	  height: 26px;
+	  width: 26px;
+	  left: 4px;
+	  bottom: 4px;
+	  background-color: white;
+	  -webkit-transition: .4s;
+	  transition: .4s;
+	}
+
+.check:checked + .slider {
+	  background-color: #2196F3;
+	}
+
+.check:focus + .slider {
+	  box-shadow: 0 0 1px #2196F3;
+	}
+
+	.check:checked + .slider:before {
+	  -webkit-transform: translateX(26px);
+	  -ms-transform: translateX(26px);
+	  transform: translateX(26px);
+	}
+.check{
+	  display:none;
+	}
+	/* Rounded sliders */
+	.slider.round {
+	  border-radius: 34px;
+	}
+
+	.slider.round:before {
+	  border-radius: 50%;
+	}
+
+	.slider{
+	  margin:1%;
+
+	}
+
+	.background_div{
+    display:inline-block;
+	  margin-top:1%;
+	  border-style:solid;
+    width:49%;
+	}
+.check:checked ~ .background_div{
+	  background-color:blue;
+	}
+	</style>
+	<h1>Reserved Space Manager</h1>
+	<div id="wrapper">
+	  <div class="perc" id="used"     style="width:{{usedPerc}}%" ><p>Used</p></div>
+	  <div class="perc" id="reserved" style="width:{{reservedPerc}}%" ><p>Reserved</p></div>
+	<ul>
+	  <li>Total - {{total}}GB</li>
+	  <li>{{usedPerc}}% - {{used}}GB - Used</li>
+	  <li>{{freePerc}}% - {{free}}GB - Free</li>
+	  <li>{{reservedPerc}}% - {{reserved}}GB -Reserved</li>
+	</ul>
+	
+     <form action="{{ url_for('refresh') }}" method="post">
+      <button id="refresh">Refresh Reserved Space</button>
+      </form>
+	  <br><br>
+	  <h2> Reserve Free Space - {{available}} Available</h2>  
+		<form action="{{ url_for('reserveFreeSpace') }}" method="post">
+		<input type="number" id="inRes" pattern="[0-9]" min="0" max="{{available}}"placeholder="Type the amount you wish to keep free." name="amountToReserve">
+		<select id="typeOption" name="type">
+		  <option value="gb_keep" >Gigabytes - Keep</option>
+		  <option value="percent_keep">% Percent - Keep</option>
+		  </select><br>
+		  <button id="submitRes">Submit</button>
+	  </form>
+	<div id="background_div" class="background_div">
+	  <h2>Run On Startup</h2>
+	  <label class="switch">
+		<input id="background_checkbox" type="checkbox" class="check" {{run_on_startup}}>
+		<span class="slider round"></span>
+	  </label>
+	</div>
+	<div id="running_div" class="background_div">
+	  <h2>Running</h2>
+	  <label class="switch">
+		<input id="running_checkbox" type="checkbox" class="check" {{running_checked}}>
+		<span class="slider round"></span>
+	  </label>
+	</div>
+</body>
+</html>
