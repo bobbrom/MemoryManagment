@@ -5,38 +5,48 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 		$(document).ready( function(){
-          var checkArr = document.getElementsByClassName("check")
-          for(var i = 0; i < checkArr.length; i++){
-            var target = checkArr[i].id
-            var divName = target.split("_")[0]+"_div"
-            console.log(divName)
-            if ($('#'+target).is(':checked')) {
-              $("#"+divName).css({"background-color":"green"})
-            }else{
-              $("#"+divName).css({"background":"red"})
-            }
-         } 
-      
-			$('.check').change( function(e){
-			  var target = e.target.id
-			  var divName = target.split("_")[0]+"_div"
-			  console.log(divName)
-				if ($(this).is(':checked')) {
-				  $("#"+divName).css({"background-color":"green"})
-				  if(target == "background_checkbox"){
-					$.post("runOnStartup");
-				  }else{
-				    $.post("runNow");
-				  }
+			var checkArr = document.getElementsByClassName("check")
+			for(var i = 0; i < checkArr.length; i++){
+				var target = checkArr[i].id
+				var divName = target.split("_")[0]+"_div"
+				console.log(divName)
+				if ($('#'+target).is(':checked')) {
+					$("#"+divName).css({"background-color":"green"})
 				}else{
 					$("#"+divName).css({"background":"red"})
-				  if(target == "background_checkbox"){
-					$.post("dontRunOnStartup");
-				  }else{
-				    $.post("dontRunNow");
-				  }
-				 }
-			  });
+				}
+			} 
+      
+			$('.check').change( function(e){
+				var target = e.target.id
+				var divName = target.split("_")[0]+"_div"
+				console.log(divName)
+				if ($(this).is(':checked')) {
+					$("#"+divName).css({"background-color":"green"})
+					if(target == "background_checkbox"){
+						$.post("runOnStartup");
+					}else{
+						$.post("runNow");
+					}
+				}else{
+					$("#"+divName).css({"background":"red"})
+					if(target == "background_checkbox"){
+						$.post("dontRunOnStartup");
+					}else{
+						$.post("dontRunNow");
+					}
+				}
+			});
+			$("#mainFolderButton").click( function(){
+				$.post( "{{ url_for('setMainFolder') }}", { 
+					mainFolder: $("#mainFolderInput").val() 
+				} );
+			});
+			$("#algorithmInput").click( function(){
+				$.post( "{{ url_for('setAlgorithm') }}", { 
+					algorithm: $("#algorithmInput").val() 
+				} );
+			});
 		});
 	</script>
 </head>
@@ -216,6 +226,20 @@
 .check:checked ~ .background_div{
 	  background-color:blue;
 	}
+	
+	#settings{
+	  border:solid;
+	  width:97%;
+	  padding:1%;
+
+	}
+
+	.settingsInput{
+	  width:88%;
+	}
+	.settingsButton{
+	  width:8%;
+	}
 	</style>
 	<h1>Reserved Space Manager</h1>
 	<div id="wrapper">
@@ -254,6 +278,25 @@
 		<input id="running_checkbox" type="checkbox" class="check" {{running_checked}}>
 		<span class="slider round"></span>
 	  </label>
+	</div>
+	<div id="settings">
+		<h2>Settings</h2>
+		<div>
+			<label for="mainFolderInput">Reserved Space Folder</label>
+			<input name="mainFolder" id="mainFolderInput" value="{{mainFolder}}" placeholder="Folder to put reserved space in" class="settingsInput"/>
+			<button id="mainFolderButton" class="settingsButton">Set</button>
+		</div>
+		<br>
+		<div>
+			<label for="algorithmInput">Algorithm</label>
+			<ul>
+				<li>1 - Fill file with all ones</li>
+				<li>0 - Fill file with all zeros</li>
+				<li>r - Fill file with pseudo-random data</li>
+			</ul>
+			<input name="algorithm" id="algorithmInput" type="text" value="{{algorithm}}" placeholder="Algorithm" class="settingsInput"/>
+			<button id="algorithmButton" class="settingsButton">Set</button>
+		</div>
 	</div>
 </body>
 </html>

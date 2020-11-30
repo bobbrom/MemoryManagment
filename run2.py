@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template
 import os
 import psutil
 import webbrowser
@@ -10,6 +10,14 @@ import threading
 app = Flask(__name__)
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+def hdd_letter():
+    f = open("data/mainFolder.dat")
+    a = f.read()[0]
+    hdd_letter = a + ":\\"
+    f.close()
+    return hdd_letter
+
 
 def getReserved():
     folder = open("data/mainFolder.dat").read()
@@ -42,13 +50,16 @@ def add_numbers():
 
     toDo = wasFree - keepFree
 
-    hdd = psutil.disk_usage("D:\\")
+    hdd = psutil.disk_usage(hdd_letter())
     nowFree = hdd.free
 
     allToDo = wasFree - keepFree
     done = nowFree - keepFree
 
     perc = (100/allToDo)*(allToDo - done)
+
+    if(perc > 100):
+        perc = 100
 
     done /= 1024**3
     return jsonify(result=round(perc,2), eta="Unknown", done=round(done,2))
@@ -57,7 +68,7 @@ def add_numbers():
 
 
 
-hdd = psutil.disk_usage("D:\\")
+hdd = psutil.disk_usage(hdd_letter())
 folder = open("data/mainFolder.dat").read()
 
 
@@ -72,7 +83,7 @@ def getReserved():
 
 @app.route("/")
 def index():
-    hdd = psutil.disk_usage("D:\\")
+    hdd = psutil.disk_usage(hdd_letter())
 
     reserved = getReserved()
 
@@ -84,7 +95,13 @@ def index():
     usedPerc     = round((100/total)*used,2)
     freePerc     = round((100/total)*free,2)
 
+    f = open("data/mainFolder.dat")
+    mainFolder = f.read()
+    f.close()
 
+    f = open("data/algorithm.dat")
+    algorithm = f.read()
+    f.close()
 
     running_checked = ""
     if(isRunning()):
@@ -104,7 +121,9 @@ def index():
                             usedPerc    =round(usedPerc,    2),
                             freePerc    =round(freePerc,    2),
                             reservedPerc=round(reservedPerc,2),
-                            available=available
+                            available=available,
+                            mainFolder=mainFolder,
+                            algorithm=algorithm
                           )
 
 
@@ -159,6 +178,19 @@ def dontRunNow():
 def refresh():
     return ""
 
+@app.route('/setMainFolder', methods=['POST'])
+def setMainFolder():
+    f = open("data/mainFolder.dat","w+")
+    f.write(request.form['mainFolder'])
+    f.close()
+    return ""
+
+@app.route('/setAlgorithm', methods=['POST'])
+def setAlgorithm():
+    f = open("data/algorithm.dat","w+")
+    f.write(request.form['algorithm'])
+    f.close()
+    return ""
 
 def background():
     file_folder = __file__.split("/")
