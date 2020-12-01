@@ -11,8 +11,6 @@ app = Flask(__name__)
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-<<<<<<< HEAD:python/run.py
-<<<<<<< HEAD:python/run.py
 def hdd_letter():
     f = open("../data/mainFolder.dat")
     a = f.read()[0]
@@ -21,10 +19,7 @@ def hdd_letter():
     return hdd_letter
 
 
-=======
->>>>>>> parent of 491d000... Added Settings to interface:run2.py
-=======
->>>>>>> parent of 491d000... Added Settings to interface:run2.py
+
 def getReserved():
     folder = open("../data/mainFolder.dat").read()
     files = []
@@ -68,19 +63,9 @@ def add_numbers():
     return jsonify(result=round(perc,2), eta="Unknown", done=round(done,2))
 
 
-
-
-
-<<<<<<< HEAD:python/run.py
-<<<<<<< HEAD:python/run.py
 hdd = psutil.disk_usage(hdd_letter())
-folder = open("../data/mainFolder.dat").read()
-=======
-=======
->>>>>>> parent of 491d000... Added Settings to interface:run2.py
-hdd = psutil.disk_usage("D:\\")
+
 folder = open("data/mainFolder.dat").read()
->>>>>>> parent of 491d000... Added Settings to interface:run2.py
 
 
 def getReserved():
@@ -106,21 +91,11 @@ def index():
     usedPerc     = round((100/total)*used,2)
     freePerc     = round((100/total)*free,2)
 
-<<<<<<< HEAD:python/run.py
-<<<<<<< HEAD:python/run.py
-    f = open("../data/mainFolder.dat")
-    mainFolder = f.read()
-    f.close()
+
 
     f = open("../data/algorithm.dat")
     algorithm = f.read()
     f.close()
-=======
-
->>>>>>> parent of 491d000... Added Settings to interface:run2.py
-=======
-
->>>>>>> parent of 491d000... Added Settings to interface:run2.py
 
     running_checked = ""
     if(isRunning()):
@@ -199,8 +174,6 @@ def dontRunNow():
 def refresh():
     return ""
 
-<<<<<<< HEAD:python/run.py
-<<<<<<< HEAD:python/run.py
 @app.route('/setMainFolder', methods=['POST'])
 def setMainFolder():
     f = open("../data/mainFolder.dat", "w+")
@@ -214,10 +187,6 @@ def setAlgorithm():
     f.write(request.form['algorithm'])
     f.close()
     return ""
-=======
->>>>>>> parent of 491d000... Added Settings to interface:run2.py
-=======
->>>>>>> parent of 491d000... Added Settings to interface:run2.py
 
 def background():
     file_folder = __file__.split("/")
