@@ -12,6 +12,7 @@ app = Flask(__name__)
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 <<<<<<< HEAD:python/run.py
+<<<<<<< HEAD:python/run.py
 def hdd_letter():
     f = open("../data/mainFolder.dat")
     a = f.read()[0]
@@ -20,6 +21,8 @@ def hdd_letter():
     return hdd_letter
 
 
+=======
+>>>>>>> parent of 491d000... Added Settings to interface:run2.py
 =======
 >>>>>>> parent of 491d000... Added Settings to interface:run2.py
 def getReserved():
@@ -69,9 +72,12 @@ def add_numbers():
 
 
 <<<<<<< HEAD:python/run.py
+<<<<<<< HEAD:python/run.py
 hdd = psutil.disk_usage(hdd_letter())
 folder = open("../data/mainFolder.dat").read()
 =======
+=======
+>>>>>>> parent of 491d000... Added Settings to interface:run2.py
 hdd = psutil.disk_usage("D:\\")
 folder = open("data/mainFolder.dat").read()
 >>>>>>> parent of 491d000... Added Settings to interface:run2.py
@@ -101,6 +107,7 @@ def index():
     freePerc     = round((100/total)*free,2)
 
 <<<<<<< HEAD:python/run.py
+<<<<<<< HEAD:python/run.py
     f = open("../data/mainFolder.dat")
     mainFolder = f.read()
     f.close()
@@ -108,6 +115,9 @@ def index():
     f = open("../data/algorithm.dat")
     algorithm = f.read()
     f.close()
+=======
+
+>>>>>>> parent of 491d000... Added Settings to interface:run2.py
 =======
 
 >>>>>>> parent of 491d000... Added Settings to interface:run2.py
@@ -190,6 +200,7 @@ def refresh():
     return ""
 
 <<<<<<< HEAD:python/run.py
+<<<<<<< HEAD:python/run.py
 @app.route('/setMainFolder', methods=['POST'])
 def setMainFolder():
     f = open("../data/mainFolder.dat", "w+")
@@ -203,6 +214,8 @@ def setAlgorithm():
     f.write(request.form['algorithm'])
     f.close()
     return ""
+=======
+>>>>>>> parent of 491d000... Added Settings to interface:run2.py
 =======
 >>>>>>> parent of 491d000... Added Settings to interface:run2.py
 
